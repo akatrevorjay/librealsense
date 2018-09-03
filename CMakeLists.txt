@@ -61,6 +61,15 @@ elseif(COMPILER_SUPPORTS_CXX0X)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
 
+option(ENABLE_CCACHE "Build with ccache." ON)
+if(ENABLE_CCACHE)
+  find_program(CCACHE_FOUND ccache)
+  if(CCACHE_FOUND)
+      set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+      set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+  endif(CCACHE_FOUND)
+endif()
+
 # This parameter is meant for disabling graphical examples when building for
 # save-to-disk targets.
 option(BUILD_GRAPHICAL_EXAMPLES "Build graphical examples and tools." ON)
@@ -125,11 +134,9 @@ if (BUILD_WITH_CUDA)
         message(STATUS "CUDA_LIBRARIES: ${CUDA_INCLUDE_DIRS} ${ALL_CUDA_LIBS}")
         set(CUDA_PROPAGATE_HOST_FLAGS OFF)
         set(CUDA_SEPARABLE_COMPILATION ON)
-        set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS}; -O3 -gencode arch=compute_53,code=sm_53
-        -gencode arch=compute_62,code=sm_62;")
+        set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS}; -O3 -gencode arch=compute_61,code=sm_61;")
     endif()
 endif()
-
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
